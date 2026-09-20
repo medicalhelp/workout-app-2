@@ -23,6 +23,10 @@ export function getWorkoutById(id) {
   return readAll().workouts.find((w) => w.id === id) ?? null
 }
 
+export function getMostRecentWorkoutByType(type) {
+  return getWorkouts().find((w) => w.type === type) ?? null
+}
+
 export function saveWorkout(workout) {
   const data = readAll()
   const index = data.workouts.findIndex((w) => w.id === workout.id)
@@ -37,11 +41,12 @@ export function saveWorkout(workout) {
 }
 
 export function createWorkout(type) {
+  const previous = getMostRecentWorkoutByType(type)
   return {
     id: crypto.randomUUID(),
     type,
     date: new Date().toISOString(),
-    content: '',
+    content: previous ? previous.content : '',
     updatedAt: Date.now(),
   }
 }

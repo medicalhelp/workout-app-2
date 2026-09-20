@@ -66,9 +66,7 @@ export default function WorkoutScreen({ workout, onBack }) {
         autoFocus
       />
 
-      <div className="workout-screen__timer">
-        <Timer />
-      </div>
+      <Timer />
     </div>
   )
 }

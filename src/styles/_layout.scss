@@ -1,0 +1,2 @@
+// Shared layout dimensions that multiple components must agree on exactly.
+$timer-bar-height: 76px; // Timer.scss's fixed height; WorkoutScreen.scss clears it with matching padding-bottom.

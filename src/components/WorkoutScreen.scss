@@ -1,10 +1,11 @@
 @use '../styles/colors' as *;
+@use '../styles/layout' as *;
 
 .workout-screen {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 16px 20px calc(20px + env(safe-area-inset-bottom));
+  padding: 16px 20px 20px;
   max-width: 480px;
   margin: 0 auto;
 
@@ -42,15 +43,10 @@
     color: $color-ink;
     min-height: 200px;
     padding: 0;
-    margin-bottom: 20px;
+    padding-bottom: calc(#{$timer-bar-height} + env(safe-area-inset-bottom));
 
     &::placeholder {
       color: $color-ink-secondary;
     }
-  }
-
-  &__timer {
-    position: sticky;
-    bottom: 0;
   }
 }

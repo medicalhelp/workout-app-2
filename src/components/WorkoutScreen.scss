@@ -23,14 +23,8 @@
     width: 32px;
   }
 
-  &__titles {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  &__date {
-    color: $color-ink-secondary;
+  &__title {
+    flex: 1;
   }
 
   &__content {

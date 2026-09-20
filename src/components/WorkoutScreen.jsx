@@ -51,10 +51,9 @@ export default function WorkoutScreen({ workout, onBack }) {
         <button className="workout-screen__back" onClick={handleBack} aria-label="Back">
           ‹
         </button>
-        <div className="workout-screen__titles">
-          <span className="text-headline">{workout.type}</span>
-          <span className="text-body workout-screen__date">{formatDate(workout.date)}</span>
-        </div>
+        <span className="text-headline workout-screen__title">
+          {workout.type} {formatDate(workout.date)}
+        </span>
       </div>
 
       <textarea

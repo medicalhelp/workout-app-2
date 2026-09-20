@@ -22,6 +22,8 @@ capture things worth doing later instead of losing them.
   a new line/set would remove the last bit of manual fiddling.
 - **Backup/export.** Data lives only in `localStorage` on one device/browser. Even a simple
   "export JSON" button is cheap insurance against a cleared cache wiping everything.
+- **Delete button in the detail view.** Swipe-to-delete only exists on Overview cards today —
+  deleting a workout while it's open (WorkoutScreen) currently requires going back first.
 
 ## Later
 

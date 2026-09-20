@@ -30,24 +30,4 @@
     flex-direction: column;
     gap: 10px;
   }
-
-  &__card {
-    width: 100%;
-    text-align: left;
-    background: $color-gray-card;
-    border-radius: 14px;
-    padding: 16px 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  &__card-type {
-    font-size: 19px;
-    color: $color-ink;
-  }
-
-  &__card-date {
-    color: $color-ink-secondary;
-  }
 }

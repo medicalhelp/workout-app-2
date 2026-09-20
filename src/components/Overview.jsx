@@ -1,7 +1,10 @@
-import { formatDate } from '../utils/date'
+import { useState } from 'react'
+import WorkoutCard from './WorkoutCard'
 import './Overview.scss'
 
-export default function Overview({ workouts, onStartWorkout, onOpenWorkout }) {
+export default function Overview({ workouts, onStartWorkout, onOpenWorkout, onDeleteWorkout }) {
+  const [openSwipeId, setOpenSwipeId] = useState(null)
+
   return (
     <div className="overview">
       <div className="overview__header">
@@ -17,10 +20,13 @@ export default function Overview({ workouts, onStartWorkout, onOpenWorkout }) {
         <ul className="overview__list">
           {workouts.map((workout) => (
             <li key={workout.id}>
-              <button className="overview__card" onClick={() => onOpenWorkout(workout.id)}>
-                <span className="text-headline overview__card-type">{workout.type}</span>
-                <span className="text-body overview__card-date">{formatDate(workout.date)}</span>
-              </button>
+              <WorkoutCard
+                workout={workout}
+                open={openSwipeId === workout.id}
+                onOpen={onOpenWorkout}
+                onSwipeChange={(isOpen) => setOpenSwipeId(isOpen ? workout.id : null)}
+                onDelete={onDeleteWorkout}
+              />
             </li>
           ))}
         </ul>

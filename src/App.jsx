@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Overview from './components/Overview'
 import TypePickerDrawer from './components/TypePickerDrawer'
 import WorkoutScreen from './components/WorkoutScreen'
-import { createWorkout, getWorkoutById, getWorkouts } from './data/workoutStore'
+import { createWorkout, deleteWorkout, getWorkoutById, getWorkouts } from './data/workoutStore'
 
 export default function App() {
   const [workouts, setWorkouts] = useState(() => getWorkouts())
@@ -32,13 +32,23 @@ export default function App() {
     refreshWorkouts()
   }
 
+  function handleDeleteWorkout(id) {
+    deleteWorkout(id)
+    refreshWorkouts()
+  }
+
   if (activeWorkout) {
     return <WorkoutScreen workout={activeWorkout} onBack={handleBackFromWorkout} />
   }
 
   return (
     <>
-      <Overview workouts={workouts} onStartWorkout={handleStartWorkout} onOpenWorkout={handleOpenWorkout} />
+      <Overview
+        workouts={workouts}
+        onStartWorkout={handleStartWorkout}
+        onOpenWorkout={handleOpenWorkout}
+        onDeleteWorkout={handleDeleteWorkout}
+      />
       <TypePickerDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} onSelect={handleSelectType} />
     </>
   )

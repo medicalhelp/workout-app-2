@@ -1,0 +1,41 @@
+@use '../styles/colors' as *;
+
+.workout-card {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+
+  &__delete {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 88px;
+    background: $color-delete;
+    color: $color-white;
+    font-weight: 600;
+    font-size: 15px;
+  }
+
+  &__surface {
+    position: relative;
+    width: 100%;
+    text-align: left;
+    background: $color-gray-card;
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    touch-action: pan-y;
+    cursor: pointer;
+  }
+
+  &__type {
+    font-size: 19px;
+    color: $color-ink;
+  }
+
+  &__date {
+    color: $color-ink-secondary;
+  }
+}

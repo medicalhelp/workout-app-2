@@ -40,6 +40,12 @@ export function saveWorkout(workout) {
   return next
 }
 
+export function deleteWorkout(id) {
+  const data = readAll()
+  data.workouts = data.workouts.filter((w) => w.id !== id)
+  writeAll(data)
+}
+
 export function createWorkout(type) {
   const previous = getMostRecentWorkoutByType(type)
   return {

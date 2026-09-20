@@ -47,14 +47,12 @@ export default function WorkoutScreen({ workout, onBack }) {
 
   return (
     <div className="workout-screen">
-      <div className="workout-screen__header">
-        <button className="workout-screen__back" onClick={handleBack} aria-label="Back">
-          ‹
-        </button>
-        <span className="text-headline workout-screen__title">
-          {workout.type} {formatDate(workout.date)}
-        </span>
-      </div>
+      <button className="workout-screen__back" onClick={handleBack} aria-label="Back">
+        ‹
+      </button>
+      <span className="text-headline workout-screen__title">
+        {workout.type} {formatDate(workout.date)}
+      </span>
 
       <textarea
         ref={textareaRef}

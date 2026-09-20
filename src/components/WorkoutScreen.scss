@@ -9,26 +9,31 @@
   max-width: 480px;
   margin: 0 auto;
 
-  &__header {
+  &__back {
+    position: sticky;
+    top: 16px;
+    z-index: 2;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: $color-gray-bg;
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-
-  &__back {
-    font-size: 28px;
+    justify-content: center;
+    font-size: 24px;
     color: $color-black;
     line-height: 1;
-    width: 32px;
+    margin-bottom: 8px;
   }
 
   &__title {
-    flex: 1;
+    display: block;
+    margin-bottom: 16px;
   }
 
   &__content {
-    flex: 1;
+    flex: 1 0 auto;
     width: 100%;
     border: none;
     outline: none;

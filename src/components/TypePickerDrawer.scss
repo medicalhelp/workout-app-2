@@ -1,0 +1,75 @@
+@use '../styles/colors' as *;
+
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: flex-end;
+  z-index: 10;
+  animation: fade-in 0.2s ease-out;
+}
+
+.drawer {
+  width: 100%;
+  background: $color-white;
+  border-radius: 20px 20px 0 0;
+  padding: 20px 20px calc(28px + env(safe-area-inset-bottom));
+  animation: slide-up 0.25s cubic-bezier(0.32, 0.72, 0, 1);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  &__title {
+    font-size: 20px;
+  }
+
+  &__close {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: $color-gray-card;
+    color: $color-ink-secondary;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__option {
+    width: 100%;
+    text-align: left;
+    padding: 16px 18px;
+    background: $color-gray-bg;
+    border-radius: 14px;
+    color: $color-ink;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

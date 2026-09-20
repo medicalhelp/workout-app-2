@@ -1,0 +1,14 @@
+// Black / white / gray system, echoing the iOS Notes + Clock visual language.
+$color-black: #000000;
+$color-white: #ffffff;
+
+$color-ink: #1c1c1e; // primary text on white
+$color-ink-secondary: #6e6e73; // dates, secondary labels
+$color-gray-bg: #f2f2f2; // page background
+$color-gray-card: #e5e5e7; // overview cards
+$color-gray-border: #d1d1d6; // hairlines
+
+// The one deliberate exception to black/white/gray: Apple's Clock app accent.
+$color-timer-accent: #ff9500;
+$color-timer-bg: #1c1c1e; // timer face background (dark, like the Clock widget)
+$color-timer-text: #ffffff;

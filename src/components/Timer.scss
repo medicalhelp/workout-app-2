@@ -1,0 +1,53 @@
+@use '../styles/colors' as *;
+
+.timer {
+  background: $color-timer-bg;
+  border-radius: 20px;
+  padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+
+  &__display {
+    color: $color-timer-text;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &__reset,
+  &__start-stop {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  &__reset {
+    background: rgba(255, 255, 255, 0.12);
+    color: $color-timer-text;
+
+    &:disabled {
+      opacity: 0.4;
+    }
+  }
+
+  &__start-stop {
+    background: rgba($color-timer-accent, 0.16);
+    color: $color-timer-accent;
+
+    &--running {
+      background: $color-timer-accent;
+      color: $color-timer-bg;
+    }
+  }
+}

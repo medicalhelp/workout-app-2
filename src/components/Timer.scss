@@ -2,38 +2,37 @@
 
 .timer {
   background: $color-timer-bg;
-  border-radius: 20px;
-  padding: 20px 20px calc(20px + env(safe-area-inset-bottom));
+  border-radius: 999px;
+  padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
+  min-height: 76px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
 
   &__display {
-    color: $color-timer-text;
+    color: $color-timer-accent;
+    margin-left: auto;
   }
 
   &__controls {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    width: 100%;
+    gap: 10px;
+    flex-shrink: 0;
   }
 
   &__reset,
   &__start-stop {
-    width: 64px;
-    height: 64px;
+    width: 44px;
+    height: 44px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 15px;
-    font-weight: 500;
   }
 
   &__reset {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.14);
     color: $color-timer-text;
 
     &:disabled {
@@ -42,12 +41,7 @@
   }
 
   &__start-stop {
-    background: rgba($color-timer-accent, 0.16);
-    color: $color-timer-accent;
-
-    &--running {
-      background: $color-timer-accent;
-      color: $color-timer-bg;
-    }
+    background: $color-timer-accent;
+    color: $color-timer-bg;
   }
 }

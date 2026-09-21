@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
 import { formatDate } from '../utils/date'
 import { getWorkoutById, saveWorkout } from '../data/workoutStore'
 import Timer from './Timer'
 import './WorkoutScreen.scss'
 
 const AUTOSAVE_INTERVAL_MS = 15000
+const TAP_TRANSITION = { type: 'spring', stiffness: 700, damping: 30 }
 
 export default function WorkoutScreen({ workout, onBack }) {
   const [content, setContent] = useState(workout.content)
@@ -50,9 +52,15 @@ export default function WorkoutScreen({ workout, onBack }) {
 
   return (
     <div className="workout-screen">
-      <button className="workout-screen__back" onClick={handleBack} aria-label="Back">
+      <motion.button
+        className="workout-screen__back"
+        onClick={handleBack}
+        whileTap={{ scale: 0.88 }}
+        transition={TAP_TRANSITION}
+        aria-label="Back"
+      >
         ‹
-      </button>
+      </motion.button>
       <span className="text-headline workout-screen__title">
         {workout.type} {formatDate(workout.date)}
       </span>

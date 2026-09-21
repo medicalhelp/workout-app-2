@@ -21,6 +21,7 @@ function CloseIcon() {
 // must wait at least this long before unmounting the exiting branch, or the shape morph
 // gets cut off mid-animation (that abrupt cut is what reads as a flicker/jump on close).
 const SHEET_TRANSITION = { duration: 0.32, ease: [0.32, 0.72, 0, 1] }
+const TAP_TRANSITION = { type: 'spring', stiffness: 700, damping: 30 }
 
 // The "Start Workout" bar and the type-picker sheet share layoutId="start-sheet", so
 // Framer Motion FLIP-animates one shape morphing into the other instead of treating them
@@ -52,9 +53,15 @@ export default function StartWorkoutSheet({ open, onOpen, onClose, onSelect }) {
                 exit={{ opacity: 0, transition: { duration: 0.08 } }}
               >
                 <span className="text-subheadline drawer__title">Select workout</span>
-                <button className="drawer__close" onClick={onClose} aria-label="Close">
+                <motion.button
+                  className="drawer__close"
+                  onClick={onClose}
+                  whileTap={{ scale: 0.88 }}
+                  transition={{ scale: TAP_TRANSITION }}
+                  aria-label="Close"
+                >
                   <CloseIcon />
-                </button>
+                </motion.button>
               </motion.div>
               <motion.div
                 className="drawer__options"

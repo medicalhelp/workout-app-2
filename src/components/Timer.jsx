@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
 import { DEFAULT_TIMER_STATE, updateWorkoutTimer } from '../data/workoutStore'
 import './Timer.scss'
+
+const TAP_TRANSITION = { type: 'spring', stiffness: 700, damping: 30 }
 
 function formatElapsed(ms) {
   const totalCentiseconds = Math.floor(ms / 10)
@@ -89,12 +92,25 @@ export default function Timer({ workout }) {
   return (
     <div className="timer">
       <div className="timer__controls">
-        <button className="timer__start-stop" onClick={handleStartStop} aria-label={running ? 'Stop' : 'Start'}>
+        <motion.button
+          className="timer__start-stop"
+          onClick={handleStartStop}
+          whileTap={{ scale: 0.88 }}
+          transition={TAP_TRANSITION}
+          aria-label={running ? 'Stop' : 'Start'}
+        >
           {running ? <PauseIcon /> : <PlayIcon />}
-        </button>
-        <button className="timer__reset" onClick={handleReset} disabled={elapsedMs === 0} aria-label="Reset">
+        </motion.button>
+        <motion.button
+          className="timer__reset"
+          onClick={handleReset}
+          disabled={elapsedMs === 0}
+          whileTap={{ scale: 0.88 }}
+          transition={TAP_TRANSITION}
+          aria-label="Reset"
+        >
           <XIcon />
-        </button>
+        </motion.button>
       </div>
       <span className="text-timer timer__display">{formatElapsed(elapsedMs)}</span>
     </div>

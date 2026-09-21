@@ -22,19 +22,4 @@
     flex-direction: column;
     gap: 12px;
   }
-
-  &__start-bar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: calc(#{$bottom-bar-height} + env(safe-area-inset-bottom));
-    background: $color-dark-surface;
-    border-radius: 20px 20px 0 0;
-    color: $color-white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding-bottom: env(safe-area-inset-bottom);
-  }
 }

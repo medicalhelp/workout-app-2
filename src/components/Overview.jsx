@@ -2,7 +2,7 @@ import { useState } from 'react'
 import WorkoutCard from './WorkoutCard'
 import './Overview.scss'
 
-export default function Overview({ workouts, onStartWorkout, onOpenWorkout, onDeleteWorkout }) {
+export default function Overview({ workouts, onOpenWorkout, onDeleteWorkout }) {
   const [openSwipeId, setOpenSwipeId] = useState(null)
 
   return (
@@ -26,10 +26,6 @@ export default function Overview({ workouts, onStartWorkout, onOpenWorkout, onDe
           ))}
         </ul>
       )}
-
-      <button className="text-headline overview__start-bar" onClick={onStartWorkout}>
-        Start Workout
-      </button>
     </div>
   )
 }

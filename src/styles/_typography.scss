@@ -1,30 +1,41 @@
 $font-system: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
-$font-mono: 'SF Mono', ui-monospace, 'Menlo', 'Consolas', monospace;
 
-// Headline: workout type title + date, matching the Apple Notes header.
+// Figma "Typography styles" reference (file KiuILdT7PgHMUNifM8xdkb, node 193:1775):
+// Headline H1 = Bold 24, Headline H2 = Bold 18, Text = Regular 16, Timer = Regular 42.
+
+// Headline H1: page titles, workout screen title, CTA button labels, sheet option rows.
 .text-headline {
   font-family: $font-system;
   font-weight: 700;
-  font-size: 28px;
+  font-size: 24px;
   line-height: 1.2;
   letter-spacing: -0.01em;
 }
 
-// Body: freeform workout text and overview screen text.
+// Headline H2: card titles, sheet title.
+.text-subheadline {
+  font-family: $font-system;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+// Text: freeform workout body copy, card dates.
 .text-body {
   font-family: $font-system;
   font-weight: 400;
-  font-size: 17px;
+  font-size: 16px;
   line-height: 1.5;
   letter-spacing: 0;
 }
 
-// Timer digits: tabular numerals, matching the iOS Lock Screen Live Activity pill.
+// Timer: elapsed time digits.
 .text-timer {
-  font-family: $font-mono;
-  font-weight: 500;
-  font-size: 36px;
+  font-family: $font-system;
+  font-weight: 400;
+  font-size: 42px;
   line-height: 1;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.01em;
+  letter-spacing: 0;
 }

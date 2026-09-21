@@ -1,17 +1,21 @@
 // Black / white / gray system, echoing the iOS Notes + Clock visual language.
+// Values below are taken exactly from the Figma design (file KiuILdT7PgHMUNifM8xdkb).
 $color-black: #000000;
 $color-white: #ffffff;
 
-$color-ink: #1c1c1e; // primary text on white
-$color-ink-secondary: #6e6e73; // dates, secondary labels
+$color-ink: #000000; // primary text on white (pure black per design)
+$color-ink-secondary: #6e6e73; // placeholder / empty-state text (no design spec; kept as-is)
 $color-page-bg: #ffffff; // page canvas (Overview, WorkoutScreen, sticky back button fill)
-$color-gray-bg: #f2f2f2; // generic UI gray fill (e.g. drawer option pills), NOT the page background
-$color-gray-card: #e5e5e7; // overview cards
+$color-gray-card: #f9f7f7; // overview cards
 $color-gray-border: #d1d1d6; // hairlines
 
-// The one deliberate exception to black/white/gray: Apple's Clock app accent.
-$color-timer-accent: #ff9500;
-$color-timer-bg: #1c1c1e; // timer face background (dark, like the Clock widget)
+// Dark surfaces: bottom action bars, the Timer, and the workout-type sheet.
+$color-dark-surface: #1c1c1e;
+
+// Timer controls.
+$color-timer-accent: #fd972f; // play/pause button fill
+$color-timer-reset-bg: #29292b; // reset button fill
+$color-timer-bg: $color-dark-surface; // timer bar background
 $color-timer-text: #ffffff;
 
 // Destructive action red, matching iOS swipe-to-delete.

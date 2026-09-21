@@ -7,12 +7,7 @@ export default function Overview({ workouts, onStartWorkout, onOpenWorkout, onDe
 
   return (
     <div className="overview">
-      <div className="overview__header">
-        <h1 className="text-headline">Workouts</h1>
-        <button className="text-body overview__start" onClick={onStartWorkout}>
-          Start Workout
-        </button>
-      </div>
+      <h1 className="text-headline overview__title">Workout</h1>
 
       {workouts.length === 0 ? (
         <p className="text-body overview__empty">No workouts yet.</p>
@@ -31,6 +26,10 @@ export default function Overview({ workouts, onStartWorkout, onOpenWorkout, onDe
           ))}
         </ul>
       )}
+
+      <button className="text-headline overview__start-bar" onClick={onStartWorkout}>
+        Start Workout
+      </button>
     </div>
   )
 }

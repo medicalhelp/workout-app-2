@@ -8,15 +8,15 @@
   bottom: 0;
   background: $color-timer-bg;
   border-radius: 20px 20px 0 0;
-  padding: 14px 20px;
-  height: calc(#{$timer-bar-height} + env(safe-area-inset-bottom));
+  padding: 14px 24px;
+  height: calc(#{$bottom-bar-height} + env(safe-area-inset-bottom));
   padding-bottom: calc(14px + env(safe-area-inset-bottom));
   display: flex;
   align-items: center;
   gap: 14px;
 
   &__display {
-    color: $color-timer-accent;
+    color: $color-timer-text;
     margin-left: auto;
   }
 
@@ -29,8 +29,8 @@
 
   &__reset,
   &__start-stop {
-    width: 44px;
-    height: 44px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -38,8 +38,7 @@
   }
 
   &__reset {
-    background: rgba(255, 255, 255, 0.14);
-    color: $color-timer-text;
+    background: $color-timer-reset-bg;
 
     &:disabled {
       opacity: 0.4;
@@ -48,6 +47,5 @@
 
   &__start-stop {
     background: $color-timer-accent;
-    color: $color-timer-bg;
   }
 }

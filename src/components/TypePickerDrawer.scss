@@ -3,7 +3,7 @@
 .drawer-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: flex-end;
   z-index: 10;
@@ -12,29 +12,28 @@
 
 .drawer {
   width: 100%;
-  background: $color-white;
+  background: $color-dark-surface;
   border-radius: 20px 20px 0 0;
-  padding: 20px 20px calc(28px + env(safe-area-inset-bottom));
+  padding: 16px 24px calc(24px + env(safe-area-inset-bottom));
   animation: slide-up 0.25s cubic-bezier(0.32, 0.72, 0, 1);
 
   &__header {
+    position: relative;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 20px;
+    justify-content: center;
+    margin-bottom: 32px;
   }
 
   &__title {
-    font-size: 20px;
+    color: $color-white;
   }
 
   &__close {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: $color-gray-card;
-    color: $color-ink-secondary;
-    font-size: 18px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -43,16 +42,16 @@
   &__options {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
   }
 
   &__option {
     width: 100%;
     text-align: left;
-    padding: 16px 18px;
-    background: $color-gray-bg;
-    border-radius: 14px;
-    color: $color-ink;
+    padding: 29px 24px 29px 33px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    color: $color-white;
   }
 }
 

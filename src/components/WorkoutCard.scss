@@ -2,7 +2,7 @@
 
 .workout-card {
   position: relative;
-  border-radius: 14px;
+  border-radius: 16px;
   overflow: hidden;
 
   &__delete {
@@ -22,7 +22,7 @@
     width: 100%;
     text-align: left;
     background: $color-gray-card;
-    padding: 16px 18px;
+    padding: 20px 24px;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -31,11 +31,10 @@
   }
 
   &__type {
-    font-size: 19px;
     color: $color-ink;
   }
 
   &__date {
-    color: $color-ink-secondary;
+    color: $color-ink;
   }
 }

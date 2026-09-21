@@ -1,2 +1,5 @@
 // Shared layout dimensions that multiple components must agree on exactly.
-$timer-bar-height: 76px; // Timer.scss's fixed height; WorkoutScreen.scss clears it with matching padding-bottom.
+// $bottom-bar-height: the fixed dark bar docked at the screen bottom — the Timer on
+// WorkoutScreen, the "Start Workout" CTA on Overview. Both are 88px per Figma; content
+// above them needs matching padding-bottom so it isn't hidden underneath.
+$bottom-bar-height: 88px;

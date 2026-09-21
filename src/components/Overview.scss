@@ -1,21 +1,13 @@
 @use '../styles/colors' as *;
+@use '../styles/layout' as *;
 
 .overview {
-  padding: 24px 20px calc(24px + env(safe-area-inset-bottom));
+  padding: 24px 24px calc(#{$bottom-bar-height} + 24px + env(safe-area-inset-bottom));
   max-width: 480px;
   margin: 0 auto;
 
-  &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  &__title {
     margin-bottom: 24px;
-  }
-
-  &__start {
-    color: $color-black;
-    font-weight: 600;
-    font-size: 17px;
   }
 
   &__empty {
@@ -28,6 +20,21 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
+  }
+
+  &__start-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(#{$bottom-bar-height} + env(safe-area-inset-bottom));
+    background: $color-dark-surface;
+    border-radius: 20px 20px 0 0;
+    color: $color-white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }

@@ -62,7 +62,7 @@ export default function WorkoutCard({ workout, open, onOpen, onSwipeChange, onDe
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
       >
-        <span className="text-headline workout-card__type">{workout.type}</span>
+        <span className="text-subheadline workout-card__type">{workout.type}</span>
         <span className="text-body workout-card__date">{formatDate(workout.date)}</span>
       </div>
     </div>

@@ -1,0 +1,13 @@
+@use './styles/colors' as *;
+
+.app-stack {
+  position: relative;
+  min-height: 100%;
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: $color-page-bg;
+  }
+}

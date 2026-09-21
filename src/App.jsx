@@ -1,8 +1,13 @@
 import { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import Overview from './components/Overview'
 import StartWorkoutSheet from './components/StartWorkoutSheet'
 import WorkoutScreen from './components/WorkoutScreen'
 import { createWorkout, deleteWorkout, getWorkoutById, getWorkouts } from './data/workoutStore'
+import './App.scss'
+
+// Matches the ease already used for the Start Workout sheet morph, for a consistent feel.
+const PAGE_TRANSITION = { duration: 0.34, ease: [0.32, 0.72, 0, 1] }
 
 export default function App() {
   const [workouts, setWorkouts] = useState(() => getWorkouts())
@@ -37,12 +42,8 @@ export default function App() {
     refreshWorkouts()
   }
 
-  if (activeWorkout) {
-    return <WorkoutScreen workout={activeWorkout} onBack={handleBackFromWorkout} />
-  }
-
   return (
-    <>
+    <div className="app-stack">
       <Overview workouts={workouts} onOpenWorkout={handleOpenWorkout} onDeleteWorkout={handleDeleteWorkout} />
       <StartWorkoutSheet
         open={drawerOpen}
@@ -50,6 +51,22 @@ export default function App() {
         onClose={() => setDrawerOpen(false)}
         onSelect={handleSelectType}
       />
-    </>
+      {/* Overview stays mounted underneath at all times; WorkoutScreen slides in/out on top of
+          it as an overlay (Notes/iOS-style push), instead of a hard instant swap. */}
+      <AnimatePresence>
+        {activeWorkout && (
+          <motion.div
+            key="workout"
+            className="app-stack__overlay"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={PAGE_TRANSITION}
+          >
+            <WorkoutScreen workout={activeWorkout} onBack={handleBackFromWorkout} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   )
 }

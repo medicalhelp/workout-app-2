@@ -22,6 +22,12 @@ body {
   color: $color-ink;
   font-family: typography.$font-system;
   -webkit-font-smoothing: antialiased;
+  // Clips the WorkoutScreen page-transition overlay while it's translated off to the right —
+  // set here (not on an inner wrapper) so body stays the one true scrolling element; an inner
+  // wrapper with overflow-x hidden would force overflow-y:auto on it too, trapping tall
+  // WorkoutScreen content in a local scroll instead of the page scroll the sticky back button
+  // depends on.
+  overflow-x: hidden;
 }
 
 button {

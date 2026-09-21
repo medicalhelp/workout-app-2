@@ -3,6 +3,10 @@
 
 * {
   box-sizing: border-box;
+  // Mobile Safari's default tap highlight is a gray overlay painted over the whole tapped
+  // element until it repaints — on a large tap target like the log textarea (which fills
+  // most of the screen), that reads as a full-screen gray flash right as the keyboard opens.
+  -webkit-tap-highlight-color: transparent;
 }
 
 html,

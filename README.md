@@ -6,7 +6,13 @@ to switch to the Clock app mid-session. Data is stored locally in the browser (`
 no backend.
 
 See `workout-app-design.md` for the fuller (deferred) v1 design; this app intentionally
-implements a smaller slice of it.
+implements a smaller slice of it — see `CLAUDE.md` before treating that doc as the current spec.
+
+## Docs
+
+- `CLAUDE.md` — architecture, deploy workflow/gotchas, and Figma design-source details for
+  anyone (human or AI) picking this project up.
+- `IMPROVEMENTS.md` — backlog of deferred/future ideas.
 
 ## Run locally
 
@@ -23,5 +29,10 @@ npm run build
 
 ## Deploy
 
-Connect this repository to Vercel (Vite is auto-detected) and deploy — no extra configuration
-needed, since the app has a single route and no server-side code.
+Deploys are manual (no GitHub auto-deploy is wired up — see `CLAUDE.md` for why):
+
+```bash
+vercel --prod
+```
+
+Live at `https://workout-app-2-khaki.vercel.app`.

@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
 import { formatDate } from '../utils/date'
 import './WorkoutCard.scss'
 
 const DELETE_WIDTH = 88
 const TAP_THRESHOLD = 8
+const SNAP_TRANSITION = { type: 'spring', stiffness: 500, damping: 34 }
 
 export default function WorkoutCard({ workout, open, onOpen, onSwipeChange, onDelete }) {
   const [dragX, setDragX] = useState(0)
@@ -55,16 +57,17 @@ export default function WorkoutCard({ workout, open, onOpen, onSwipeChange, onDe
       <button className="workout-card__delete" onClick={() => onDelete(workout.id)} aria-label="Delete workout">
         Delete
       </button>
-      <div
+      <motion.div
         className="workout-card__surface"
-        style={{ transform: `translateX(${dragX}px)`, transition: draggingRef.current ? 'none' : 'transform 0.2s ease-out' }}
+        animate={{ x: dragX }}
+        transition={draggingRef.current ? { duration: 0 } : SNAP_TRANSITION}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
       >
         <span className="text-subheadline workout-card__type">{workout.type}</span>
         <span className="text-body workout-card__date">{formatDate(workout.date)}</span>
-      </div>
+      </motion.div>
     </div>
   )
 }

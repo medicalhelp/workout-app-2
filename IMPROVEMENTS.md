@@ -21,6 +21,23 @@ capture things worth doing later instead of losing them.
   - Note: this is a different direction from the drawer sheet morph (a page instead of a sheet)
     — if this ships, the morph work either gets dropped or repurposed as the page-entry
     transition instead.
+- **Duplicate/repeat a workout directly from a card.** A long-press or swipe action on an
+  Overview card to clone that exact past session as today's new entry. Faster than Start
+  Workout → pick type → wait for the "last session of this type" prefill when you already know
+  exactly which past log you want to repeat — and it's the only way to start from something
+  other than the most recent session of a type.
+- **Lightweight bodyweight/measurement log.** A separate, minimal freeform log (date + a
+  number/note) for tracking bodyweight over time — same "don't force structure" spirit as the
+  workout log, but a distinct concern from workout content. Needs its own small data store,
+  entry point, and a simple list view; doesn't belong inside `content`.
+- **Exercise autosuggest while typing.** Instead of purely free text, surface a select-from-list
+  / autocomplete for exercise names as you type in the log textarea, to cut down on repetitive
+  retyping ("Preacher Curl", "Bench Press", etc. every session). Source suggestions from the
+  user's *own* previously-typed exercise names (parsed out of past `content`), not a fixed
+  catalog — keeps the "no forced taxonomy" principle from `workout-app-design.md`'s decisions
+  #5/#6 intact, it's just faster typing, not a structured exercise database. The tricky part is
+  UI: a real autocomplete dropdown positioned near the cursor inside a plain `<textarea>` is
+  more involved than autocomplete on a normal `<input>`.
 
 ## Near-term
 
@@ -57,3 +74,7 @@ capture things worth doing later instead of losing them.
   (Timer controls, back button, drawer close); removed all three from the backlog. Drawer
   sheet morph was already shipped earlier but had been left listed — removed now too. Timer
   state-change animation is the one piece of the original micro-animations idea still open.
+- 2026-09-21 — shipped PWA installability (web manifest, iOS "Add to Home Screen" meta tags,
+  192/512px icons generated from the existing favicon). Added three new MVP ideas: duplicate/
+  repeat a workout from a card, a lightweight bodyweight log, and exercise autosuggest while
+  typing.

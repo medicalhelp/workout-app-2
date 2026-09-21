@@ -63,7 +63,6 @@ export default function WorkoutScreen({ workout, onBack }) {
         value={content}
         onChange={handleChange}
         placeholder="Log your sets..."
-        autoFocus
       />
 
       <Timer workout={workout} />

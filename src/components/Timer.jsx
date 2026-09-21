@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { DEFAULT_TIMER_STATE, updateWorkoutTimer } from '../data/workoutStore'
 import './Timer.scss'
 
 function formatElapsed(ms) {
@@ -43,10 +44,16 @@ function XIcon() {
   )
 }
 
-export default function Timer() {
-  const [running, setRunning] = useState(false)
-  const [elapsedMs, setElapsedMs] = useState(0)
-  const startedAtRef = useRef(null)
+export default function Timer({ workout }) {
+  const initialTimer = workout.timer ?? DEFAULT_TIMER_STATE
+  const initialElapsedMs =
+    initialTimer.running && initialTimer.startedAt != null
+      ? Date.now() - initialTimer.startedAt
+      : initialTimer.elapsedMs ?? 0
+
+  const [running, setRunning] = useState(Boolean(initialTimer.running))
+  const [elapsedMs, setElapsedMs] = useState(initialElapsedMs)
+  const startedAtRef = useRef(Date.now() - initialElapsedMs)
   const frameRef = useRef(null)
 
   useEffect(() => {
@@ -64,15 +71,19 @@ export default function Timer() {
   function handleStartStop() {
     if (running) {
       setRunning(false)
+      updateWorkoutTimer(workout, { running: false, startedAt: null, elapsedMs })
     } else {
-      startedAtRef.current = Date.now() - elapsedMs
+      const startedAt = Date.now() - elapsedMs
+      startedAtRef.current = startedAt
       setRunning(true)
+      updateWorkoutTimer(workout, { running: true, startedAt, elapsedMs })
     }
   }
 
   function handleReset() {
     setRunning(false)
     setElapsedMs(0)
+    updateWorkoutTimer(workout, { running: false, startedAt: null, elapsedMs: 0 })
   }
 
   return (

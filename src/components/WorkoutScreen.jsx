@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { formatDate } from '../utils/date'
-import { saveWorkout } from '../data/workoutStore'
+import { getWorkoutById, saveWorkout } from '../data/workoutStore'
 import Timer from './Timer'
 import './WorkoutScreen.scss'
 
@@ -18,7 +18,10 @@ export default function WorkoutScreen({ workout, onBack }) {
 
   function persist() {
     if (!dirtyRef.current) return
-    saveWorkout({ ...workout, content: contentRef.current })
+    // Merge onto the latest stored record (not the stale `workout` prop from mount) so
+    // this doesn't clobber timer state the Timer component may have persisted since.
+    const current = getWorkoutById(workout.id) ?? workout
+    saveWorkout({ ...current, content: contentRef.current })
     dirtyRef.current = false
   }
 
@@ -63,7 +66,7 @@ export default function WorkoutScreen({ workout, onBack }) {
         autoFocus
       />
 
-      <Timer />
+      <Timer workout={workout} />
     </div>
   )
 }

@@ -1,5 +1,7 @@
 const STORAGE_KEY = 'workout-tracker-data'
 
+export const DEFAULT_TIMER_STATE = { running: false, startedAt: null, elapsedMs: 0 }
+
 function readAll() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
@@ -46,6 +48,21 @@ export function deleteWorkout(id) {
   writeAll(data)
 }
 
+// Patches just the timer field, without bumping updatedAt — starting/pausing the
+// rest timer shouldn't reorder the Overview list the way editing content does.
+// `workout` is the caller's current copy, used to seed the row if this is a brand-new
+// workout that hasn't been autosaved yet (e.g. the timer is touched before any typing).
+export function updateWorkoutTimer(workout, timer) {
+  const data = readAll()
+  const index = data.workouts.findIndex((w) => w.id === workout.id)
+  if (index === -1) {
+    data.workouts.push({ ...workout, timer, updatedAt: Date.now() })
+  } else {
+    data.workouts[index] = { ...data.workouts[index], timer }
+  }
+  writeAll(data)
+}
+
 export function createWorkout(type) {
   const previous = getMostRecentWorkoutByType(type)
   return {
@@ -54,5 +71,6 @@ export function createWorkout(type) {
     date: new Date().toISOString(),
     content: previous ? previous.content : '',
     updatedAt: Date.now(),
+    timer: DEFAULT_TIMER_STATE,
   }
 }

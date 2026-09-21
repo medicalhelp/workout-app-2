@@ -57,9 +57,18 @@ capture things worth doing later instead of losing them.
 ## Later
 
 - Trend charts / PRs / volume-over-time.
-- Native iOS app with a real Lock Screen widget (WidgetKit/ActivityKit) — not possible from a
-  web app; would need a native wrapper (e.g. Capacitor + a Swift widget extension) and App
-  Store distribution.
+- **Native rest-timer Live Activity on the Lock Screen/Dynamic Island** (ActivityKit) — the
+  actual API for a live-ticking timer there; a static WidgetKit timeline widget isn't the right
+  tool. Not possible from the web app itself (no web API reaches ActivityKit/WidgetKit) — needs
+  a genuinely separate Swift/Xcode codebase, either a full native rewrite or a thin native
+  wrapper (e.g. Capacitor, or a bare `WKWebView` shell) around the existing web app plus a
+  native Live Activity extension, bridging timer start/stop from the web JS to native code.
+  **App Store distribution is not required** for personal use — Xcode can install straight onto
+  your own iPhone via your Apple ID with no review/listing. A free Apple ID re-signs every 7
+  days (reinstall from Xcode weekly); the $99/year Apple Developer Program gets ~1-year
+  certificates and TestFlight (wireless reinstall, no cable). Either way this can't be built or
+  tested in this web-only dev environment (no macOS/Xcode here) — someone would need to open
+  and build it on an actual Mac.
 - Multi-device sync (iCloud or similar) — `localStorage` is single-device only.
 
 ## Log
@@ -78,3 +87,7 @@ capture things worth doing later instead of losing them.
   192/512px icons generated from the existing favicon). Added three new MVP ideas: duplicate/
   repeat a workout from a card, a lightweight bodyweight log, and exercise autosuggest while
   typing.
+- 2026-09-21 — corrected the Later section's Lock Screen widget entry: App Store distribution
+  isn't actually required for personal use (Xcode can sideload straight to your own iPhone) —
+  it still needs a native Swift/Xcode codebase and ActivityKit specifically, just not a public
+  release.

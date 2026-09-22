@@ -56,19 +56,19 @@ capture things worth doing later instead of losing them.
     form depending on keyboard visibility, similar to the drawer sheet morph?
   - Does tapping the pill expand it to a full view (the current bottom-bar controls), or does it
     stay compact-only while the keyboard's up?
-- **Persistent "active workout" indicator on Overview** (Google Maps-style) — exploratory, open
-  questions, not a decided design. Google Maps keeps a compact "resume navigation" bar visible
-  even after you've backed out of the live turn-by-turn view; idea is a similar affordance on
-  Overview so you can jump back into an in-progress workout without hunting for its card.
-  Questions still open:
-  - **What counts as "active"?** The app has no start/finish concept today —
-    `workout-app-design.md` decision #16 is explicit that a session stays "open" until you start
-    a new one or walk away, with no "Finish" action. So "active" isn't a stored state, it'd have
-    to be inferred: the most recently created/opened workout regardless of age? Only while its
-    Timer is actually running? Only if it was touched within the last N hours? Some combination?
-  - **Add an X to dismiss it?** And if so, does dismissing just hide the indicator for that
-    workout (until you reopen it), or does it change whether that workout still counts as
-    "active" for the criteria above?
+- **Persistent "active workout" indicator on Overview** (Google Maps-style). Google Maps keeps a
+  compact "resume navigation" bar visible even after you've backed out of the live turn-by-turn
+  view; idea is a similar affordance on Overview so you can jump back into an in-progress
+  workout without hunting for its card. Design converged through discussion:
+  - **"Active" = the most recently *created* workout**, specifically — not just recently edited
+    (which would also catch someone reopening old history to fix a typo) and not inferred from
+    Timer state. Simple and deterministic: set the moment `createWorkout` fires, via the Start
+    Workout flow only.
+  - **Expires 2 hours after creation** (`date`), rather than staying "active" indefinitely.
+    Workouts typically run 1–1.5h, so 2h gives buffer for a longer session without the indicator
+    lingering for a workout logged this morning and irrelevant by evening. No dismiss (X) button
+    needed — expiry handles it, and there's never more than one active workout at a time (a new
+    one naturally supersedes whichever was showing).
 
 ## Near-term
 
@@ -128,3 +128,6 @@ capture things worth doing later instead of losing them.
 - 2026-09-22 — added a persistent "active workout" indicator idea (Google Maps-style) to MVP —
   exploratory, with open questions on what counts as "active" (no start/finish concept exists
   today) and whether it's dismissible.
+- 2026-09-22 — converged the active-workout-indicator design through discussion: "active" means
+  most recently *created* (not just edited/reopened), expires 2h after creation, no dismiss
+  button needed.

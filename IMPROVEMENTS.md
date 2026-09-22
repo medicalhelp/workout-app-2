@@ -56,6 +56,19 @@ capture things worth doing later instead of losing them.
     form depending on keyboard visibility, similar to the drawer sheet morph?
   - Does tapping the pill expand it to a full view (the current bottom-bar controls), or does it
     stay compact-only while the keyboard's up?
+- **Persistent "active workout" indicator on Overview** (Google Maps-style) — exploratory, open
+  questions, not a decided design. Google Maps keeps a compact "resume navigation" bar visible
+  even after you've backed out of the live turn-by-turn view; idea is a similar affordance on
+  Overview so you can jump back into an in-progress workout without hunting for its card.
+  Questions still open:
+  - **What counts as "active"?** The app has no start/finish concept today —
+    `workout-app-design.md` decision #16 is explicit that a session stays "open" until you start
+    a new one or walk away, with no "Finish" action. So "active" isn't a stored state, it'd have
+    to be inferred: the most recently created/opened workout regardless of age? Only while its
+    Timer is actually running? Only if it was touched within the last N hours? Some combination?
+  - **Add an X to dismiss it?** And if so, does dismissing just hide the indicator for that
+    workout (until you reopen it), or does it change whether that workout still counts as
+    "active" for the criteria above?
 
 ## Near-term
 
@@ -112,3 +125,6 @@ capture things worth doing later instead of losing them.
 - 2026-09-22 — added two ideas from testing, both MVP: swipe-down-to-dismiss-keyboard
   (Notes-style), and rethinking the Timer's presentation as a Dynamic-Island-styled pill when
   the keyboard covers the current bottom bar (still exploratory — open questions noted inline).
+- 2026-09-22 — added a persistent "active workout" indicator idea (Google Maps-style) to MVP —
+  exploratory, with open questions on what counts as "active" (no start/finish concept exists
+  today) and whether it's dismissible.

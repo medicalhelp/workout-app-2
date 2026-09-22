@@ -69,6 +69,17 @@ capture things worth doing later instead of losing them.
     lingering for a workout logged this morning and irrelevant by evening. No dismiss (X) button
     needed — expiry handles it, and there's never more than one active workout at a time (a new
     one naturally supersedes whichever was showing).
+- **Undo on delete.** Swipe-to-delete is now spring-loaded and instant (and there's no backup
+  unless you've manually exported) — a mis-swipe permanently loses a log. A brief "Deleted —
+  Undo" snackbar after delete, matching the removal animation's timing, closes that risk with
+  little added complexity.
+- **Edit a workout's type after creation.** `type` is fixed at `createWorkout` today — no way to
+  fix a mis-tapped "Upper" vs "Lower" without deleting and recreating (and manually copying the
+  content over to not lose it). A simple type-switcher control in WorkoutScreen closes the gap.
+- **Streak/frequency indicator on Overview.** Something lightweight like "3-day streak" or "last
+  workout: 2 days ago" — a motivational nudge derived from existing `date` fields, no new data
+  or charts needed. Distinct from (and much smaller than) the fuller "trend charts" idea below
+  in Later.
 
 ## Near-term
 
@@ -131,3 +142,5 @@ capture things worth doing later instead of losing them.
 - 2026-09-22 — converged the active-workout-indicator design through discussion: "active" means
   most recently *created* (not just edited/reopened), expires 2h after creation, no dismiss
   button needed.
+- 2026-09-22 — added three new MVP ideas: undo on delete, editing a workout's type after
+  creation, and a lightweight streak/frequency indicator on Overview.

@@ -38,6 +38,24 @@ capture things worth doing later instead of losing them.
   #5/#6 intact, it's just faster typing, not a structured exercise database. The tricky part is
   UI: a real autocomplete dropdown positioned near the cursor inside a plain `<textarea>` is
   more involved than autocomplete on a normal `<input>`.
+- **Swipe down to dismiss the keyboard.** From testing: while the log textarea is focused,
+  swiping down on the content area should dismiss the keyboard (blur the field) without
+  navigating away — matching Apple Notes. Right now there's no such gesture; the only way to
+  drop the keyboard is tapping elsewhere or an OS-level gesture.
+- **Rethink the Timer's presentation when the keyboard is open.** From testing, exploratory —
+  these are open questions, not a decided design: the Timer is currently a fixed bar docked to
+  the *bottom* of the screen, which the on-screen keyboard covers or pushes away — right when
+  you're typing, which is exactly when the rest timer matters most. Idea: a compact "pill"
+  version of the timer, visually similar to the Dynamic Island (rounded pill, dark background)
+  — but an in-app UI element styled that way, not the real OS Dynamic Island surface (that's the
+  separate native Live Activity idea in Later, below, which needs ActivityKit; this one is a
+  normal Framer Motion component, buildable in the current web app). Questions still open:
+  - Where does the pill sit — pinned above the keyboard while it's up, or at the top of the
+    screen generally?
+  - Does it morph/transition between the pill (compact) form and the current full bottom-bar
+    form depending on keyboard visibility, similar to the drawer sheet morph?
+  - Does tapping the pill expand it to a full view (the current bottom-bar controls), or does it
+    stay compact-only while the keyboard's up?
 
 ## Near-term
 
@@ -91,3 +109,6 @@ capture things worth doing later instead of losing them.
   isn't actually required for personal use (Xcode can sideload straight to your own iPhone) —
   it still needs a native Swift/Xcode codebase and ActivityKit specifically, just not a public
   release.
+- 2026-09-22 — added two ideas from testing, both MVP: swipe-down-to-dismiss-keyboard
+  (Notes-style), and rethinking the Timer's presentation as a Dynamic-Island-styled pill when
+  the keyboard covers the current bottom bar (still exploratory — open questions noted inline).

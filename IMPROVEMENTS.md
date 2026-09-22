@@ -95,6 +95,48 @@ capture things worth doing later instead of losing them.
   "export JSON" button is cheap insurance against a cleared cache wiping everything.
 - **Delete button in the detail view.** Swipe-to-delete only exists on Overview cards today —
   deleting a workout while it's open (WorkoutScreen) currently requires going back first.
+- **Exercise bank with aliases, and a per-exercise progression view.** Evolves the "Exercise
+  autosuggest" MVP idea above into something bigger: a persistent bank of canonical exercises,
+  each holding known alias spellings (`Preacher Curl` / `preacher Curl` / `Preacher biceps
+  curl` — all the same exercise, typed differently over time), so history can eventually be
+  grouped and browsed per exercise ("show me every Preacher Curl session"). This directly picks
+  back up `workout-app-design.md` decision #5, which raised exactly this ("user proactively
+  suggested a catalog with alias resolution") before the project deliberately scoped it out of
+  v1 — revisit once the lighter autosuggest MVP has been lived with for a while.
+  - **Four interaction modes, all coexisting, none forced:**
+    1. Write it yourself, fully freeform — exactly like today, zero interaction with the bank.
+    2. Start typing and it autosuggests (the MVP idea above, now sourced from the bank's
+       canonical names + aliases instead of raw parsed history).
+    3. Tap a button to open the bank as a picker and select an exercise, inserting it at the
+       cursor.
+    4. Tap an exercise name to see its data/progression.
+  - **Picking a suggestion (mode 2 or 3) is what links that line to the canonical exercise** —
+    the same interaction that reduces typing also builds the alias graph, no separate "manage
+    aliases" screen needed. Typing by hand without picking (mode 1) just stays plain unlinked
+    text, exactly as it does today — nothing is ever forced or retroactively required, and nothing
+    about existing `content` changes shape; the bank is a side index, not a replacement.
+  - **Mode 4 — recommendation:** don't try to make words *inside* the freeform textarea
+    individually tappable. A plain `<textarea>` can't have clickable spans without replacing it
+    with a much heavier rich-text/contenteditable component, which risks the auto-grow,
+    autosave, and sticky-back-button behavior already carefully tuned (see the `flex: 1 0 auto`
+    note in CLAUDE.md) for comparatively little gain. Instead: a small "info" button in the
+    toolbar area above the keyboard — the same real estate the Timer-pill idea above wants, so
+    the two will need to be reconciled if both ship — showing data for whichever exercise the
+    *cursor* is currently sitting on (same line-detection heuristic as the autosuggest parsing).
+    A separate, dedicated "Exercises" list screen (browseable on its own, independent of any
+    specific day's log) is probably the more natural *primary* way to look up a full history;
+    the info button while typing is a contextual shortcut on top of that, not a replacement.
+  - **Parsing exercise names out of freeform lines** (needed for modes 2 and 4's cursor-based
+    lookup) has no reliable structure to lean on — the working heuristic discussed is "text
+    before the first digit" (`Bench Press 5x5 @80kg` → `Bench Press`), which handles the common
+    case but isn't bulletproof (an exercise name containing a number, e.g. "Figure-8 Curl",
+    would misfire). Fine to ship as an imperfect heuristic — a parsing miss just means a
+    suggestion doesn't show up that session, not corrupted data, since `content` itself is
+    untouched either way.
+  - **Progression charts** (weight/reps over time, not just "list every session of this
+    exercise") is a further step beyond grouping by name — still needs pulling numbers out of
+    the freeform text for linked lines. Connects to "Trend charts / PRs / volume-over-time" in
+    Later, below.
 
 ## Later
 
@@ -144,3 +186,8 @@ capture things worth doing later instead of losing them.
   button needed.
 - 2026-09-22 — added three new MVP ideas: undo on delete, editing a workout's type after
   creation, and a lightweight streak/frequency indicator on Overview.
+- 2026-09-22 — added exercise bank + aliases + per-exercise progression view to Near-term,
+  building on the MVP autosuggest idea: four coexisting interaction modes (freeform, autosuggest,
+  select-from-list, tap-to-see-data), picking a suggestion is what links a line to a canonical
+  exercise, and an info button above the keyboard (not inline-tappable text) for viewing an
+  exercise's data while typing.

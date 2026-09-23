@@ -26,15 +26,13 @@ const TAP_TRANSITION = { type: 'spring', stiffness: 700, damping: 30 }
 
 const TEXT_PAIR_SIZE = { closed: 24, open: 18 }
 
-// The dissolve: the outgoing text starts fading+blurring out immediately, and the incoming
-// text starts before the outgoing one has finished — a 160ms overlap where both are partway
-// faded/blurred at once — rather than a hard handoff with a blank gap in between. The incoming
-// text's end is still pinned to when the box morph (SHEET_TRANSITION, 0.32s) finishes, so the
-// two land together: delay 0.06 + duration 0.26 = 0.32. Blur (rather than a flat crossfade)
-// sells the illusion of one text morphing into the other despite the words actually being
-// completely different, glyph for glyph.
-const TEXT_PAIR_EXIT_TRANSITION = { duration: 0.22 }
-const TEXT_PAIR_ENTER_TRANSITION = { duration: 0.26, delay: 0.06 }
+// The dissolve: both texts crossfade+blur across the full span of the position/size move,
+// starting and ending together with it — no separate exit/enter pacing, just the outgoing
+// text going from fully shown to fully hidden while the incoming text does the exact reverse,
+// in lockstep, the whole way through. Reuses SHEET_TRANSITION directly so this is guaranteed
+// to start/end exactly when the box morph and the position/size move do. Blur (rather than a
+// flat crossfade) sells the illusion of one text morphing into the other despite the words
+// actually being completely different, glyph for glyph.
 
 // A single always-mounted text pair ("Start Workout" / "Select workout") stacked in the same
 // CSS grid cell so they share one center point by construction, instead of relying on two
@@ -184,7 +182,7 @@ export default function StartWorkoutSheet({ open, onOpen, onClose, onSelect }) {
             style={{ gridArea: '1 / 1' }}
             initial={{ opacity: 1, filter: 'blur(0px)' }}
             animate={{ opacity: open ? 0 : 1, filter: open ? 'blur(6px)' : 'blur(0px)' }}
-            transition={open ? TEXT_PAIR_EXIT_TRANSITION : TEXT_PAIR_ENTER_TRANSITION}
+            transition={SHEET_TRANSITION}
           >
             Start Workout
           </motion.span>
@@ -192,7 +190,7 @@ export default function StartWorkoutSheet({ open, onOpen, onClose, onSelect }) {
             style={{ gridArea: '1 / 1' }}
             initial={{ opacity: 0, filter: 'blur(6px)' }}
             animate={{ opacity: open ? 1 : 0, filter: open ? 'blur(0px)' : 'blur(6px)' }}
-            transition={open ? TEXT_PAIR_ENTER_TRANSITION : TEXT_PAIR_EXIT_TRANSITION}
+            transition={SHEET_TRANSITION}
           >
             Select workout
           </motion.span>

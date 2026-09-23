@@ -26,13 +26,20 @@ const TAP_TRANSITION = { type: 'spring', stiffness: 700, damping: 30 }
 
 const TEXT_PAIR_SIZE = { closed: 24, open: 18 }
 
-// TEMP DEBUG: a single always-mounted, always-opaque text pair ("Start Workout" red /
-// "Select workout" white) stacked in the same CSS grid cell so they share one center point
-// by construction, instead of relying on two elements happening to be positioned the same.
-// Only this wrapper's `top`/`fontSize` animate, driven directly off `open` — no layoutId on
-// the text. (A layoutId handoff unmounts the exiting element once AnimatePresence's exit
-// timing elapses, which is why an earlier approach couldn't keep both texts visible at once
-// — see git history on this file.)
+// The dissolve: whichever text is becoming hidden fades out fast (no delay, so it doesn't
+// linger through the move), while the one becoming visible fades in later and slower, timed
+// to land right as the box morph (SHEET_TRANSITION, 0.32s) finishes — delay 0.14 + duration
+// 0.18 = 0.32. Blur (rather than a flat crossfade) sells the illusion of one text morphing
+// into the other despite the words actually being completely different, glyph for glyph.
+const TEXT_PAIR_EXIT_TRANSITION = { duration: 0.08 }
+const TEXT_PAIR_ENTER_TRANSITION = { duration: 0.18, delay: 0.14 }
+
+// A single always-mounted text pair ("Start Workout" / "Select workout") stacked in the same
+// CSS grid cell so they share one center point by construction, instead of relying on two
+// elements happening to be positioned the same. The wrapper's `top`/`fontSize` animate,
+// driven directly off `open` — no layoutId on the text, since a layoutId handoff unmounts the
+// exiting element once AnimatePresence's exit timing elapses, which doesn't allow a clean
+// crossfade between two texts that stay in lockstep position/size-wise throughout.
 //
 // The vertical target is measured live off the real elements (the bar and the close button)
 // via refs rather than hardcoded — a hardcoded pixel value taken from a desktop-browser
@@ -136,12 +143,11 @@ export default function StartWorkoutSheet({ open, onOpen, onClose, onSelect }) {
         )}
       </AnimatePresence>
 
-      {/* TEMP DEBUG: the always-visible synchronized text pair. Both texts stay fully opaque
-          and perfectly overlapping (same grid cell) at all times; this wrapper's position and
-          font-size are the only things that animate, moving/resizing both texts together as
-          one unit between the bar's center and the close button's center. `top` + translate(-50%)
-          (rather than `bottom`) so the animated value always means "vertical center", regardless
-          of how the text's own line-height changes between the two font sizes.
+      {/* The synchronized text pair. Position and font-size move together as one unit between
+          the bar's center and the close button's center (`top` + translate(-50%, -50%) rather
+          than `bottom`, so the animated value always means "vertical center" regardless of how
+          the text's own line-height changes between the two font sizes); each text's own
+          opacity/blur crossfades independently, below.
 
           Gated on `centerY != null`: nothing has been measured yet for one frame on first
           mount (before the layout effect above runs), so this doesn't render at all until a
@@ -160,6 +166,7 @@ export default function StartWorkoutSheet({ open, onOpen, onClose, onSelect }) {
             pointerEvents: 'none',
             fontWeight: 700,
             whiteSpace: 'nowrap',
+            color: 'white',
           }}
           // The very first mount always happens while closed (the drawer starts closed), so
           // `initial` matches that state exactly — no animation on the reveal itself, only on
@@ -171,8 +178,22 @@ export default function StartWorkoutSheet({ open, onOpen, onClose, onSelect }) {
           }}
           transition={SHEET_TRANSITION}
         >
-          <span style={{ gridArea: '1 / 1', color: 'red' }}>Start Workout</span>
-          <span style={{ gridArea: '1 / 1', color: 'white' }}>Select workout</span>
+          <motion.span
+            style={{ gridArea: '1 / 1' }}
+            initial={{ opacity: 1, filter: 'blur(0px)' }}
+            animate={{ opacity: open ? 0 : 1, filter: open ? 'blur(6px)' : 'blur(0px)' }}
+            transition={open ? TEXT_PAIR_EXIT_TRANSITION : TEXT_PAIR_ENTER_TRANSITION}
+          >
+            Start Workout
+          </motion.span>
+          <motion.span
+            style={{ gridArea: '1 / 1' }}
+            initial={{ opacity: 0, filter: 'blur(6px)' }}
+            animate={{ opacity: open ? 1 : 0, filter: open ? 'blur(0px)' : 'blur(6px)' }}
+            transition={open ? TEXT_PAIR_ENTER_TRANSITION : TEXT_PAIR_EXIT_TRANSITION}
+          >
+            Select workout
+          </motion.span>
         </motion.div>
       )}
     </MotionConfig>

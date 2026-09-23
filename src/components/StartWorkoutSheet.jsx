@@ -78,22 +78,29 @@ export default function StartWorkoutSheet({ open, onOpen, onClose, onSelect }) {
             </motion.div>
           </motion.div>
         ) : (
+          // No opacity animation on the box itself — it must stay fully opaque throughout,
+          // matching .drawer's own box (which has none either). The shared layoutId hands the
+          // box off to whichever element just mounted almost instantly, so if this box's
+          // opacity were delayed/faded like the label used to be, the box briefly goes
+          // invisible right as it becomes the only thing occupying that screen region — the
+          // page's white background shows through underneath. Confirmed with a pixel sample
+          // mid-close: the box read as (253,253,253), i.e. pure white, not a color mismatch.
           <motion.button
             key="bar"
             layoutId="start-sheet"
             className="text-headline start-bar"
             onClick={onOpen}
-            initial={{ opacity: 0 }}
-            // The box's shape handoff happens almost immediately on both open and close
-            // (layoutId ownership passes to whichever element just mounted), so the label
-            // must match pace: a delayed reveal while opening (wait for the box to shrink
-            // to bar size), but an immediate fade on close, or it lingers over the sheet
-            // that's already taken its place.
-            animate={{ opacity: 1, transition: { opacity: { duration: 0.15, delay: 0.15 } } }}
-            exit={{ opacity: 0, transition: { opacity: { duration: 0.08 } } }}
             transition={{ layout: SHEET_TRANSITION }}
           >
-            Start Workout
+            {/* Only the label fades — same "wait for the box, then reveal on open / vanish
+                fast on close" pacing as before, just scoped to text instead of the whole box. */}
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { duration: 0.15, delay: 0.15 } }}
+              exit={{ opacity: 0, transition: { duration: 0.08 } }}
+            >
+              Start Workout
+            </motion.span>
           </motion.button>
         )}
       </AnimatePresence>

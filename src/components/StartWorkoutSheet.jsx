@@ -46,7 +46,7 @@ const TEXT_PAIR_SIZE = { closed: 24, open: 18 }
 // measurement doesn't hold on a real device (safe-area insets, Safari's dynamic toolbar,
 // system font metrics all shift it), and "centered with the icon button" is what's actually
 // wanted for the open state, not wherever the old title text happened to sit.
-export default function StartWorkoutSheet({ open, onOpen, onClose, onSelect }) {
+export default function StartWorkoutSheet({ open, hidden, onOpen, onClose, onSelect }) {
   const barRef = useRef(null)
   const closeButtonRef = useRef(null)
   const [closedCenterY, setClosedCenterY] = useState(null)
@@ -153,8 +153,14 @@ export default function StartWorkoutSheet({ open, onOpen, onClose, onSelect }) {
           mount (before the layout effect above runs), so this doesn't render at all until a
           real position is known — otherwise it'd mount at the browser's unset-style defaults
           (top: auto, 16px font) and visibly animate in from there, same class of flash as the
-          earlier fontSize-from-16px bug this file used to have. */}
-      {centerY != null && (
+          earlier fontSize-from-16px bug this file used to have.
+
+          Also gated on `!hidden`: this is a `position: fixed` element sitting above the rest
+          of the page, so it doesn't get covered by whatever's on top the normal DOM-order way
+          — without this, it bled through on top of WorkoutScreen once a workout was open (its
+          z-index beat .app-stack__overlay's), showing "Start Workout" floating over the
+          in-workout timer bar. */}
+      {centerY != null && !hidden && (
         <motion.div
           style={{
             position: 'fixed',

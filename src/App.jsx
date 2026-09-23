@@ -47,6 +47,7 @@ export default function App() {
       <Overview workouts={workouts} onOpenWorkout={handleOpenWorkout} onDeleteWorkout={handleDeleteWorkout} />
       <StartWorkoutSheet
         open={drawerOpen}
+        hidden={Boolean(activeWorkout)}
         onOpen={handleStartWorkout}
         onClose={() => setDrawerOpen(false)}
         onSelect={handleSelectType}

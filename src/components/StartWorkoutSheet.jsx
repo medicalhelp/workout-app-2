@@ -23,13 +23,18 @@ function CloseIcon() {
 const SHEET_TRANSITION = { duration: 0.32, ease: [0.32, 0.72, 0, 1] }
 const TAP_TRANSITION = { type: 'spring', stiffness: 700, damping: 30 }
 
-// The label and the title also share a layoutId (separate from the box's), so the text
-// itself moves and resizes from the bar's 24px label position into the header's 18px title
-// position instead of two texts fading past each other in place. Blur+opacity (rather than a
-// flat crossfade) disguises that the actual words differ and can't morph glyph-by-glyph —
-// mirrors SwiftUI's matchedGeometryEffect paired with a blurReplace-style content dissolve.
-const TITLE_ENTER_TRANSITION = { duration: 0.18, delay: 0.14 }
-const TITLE_EXIT_TRANSITION = { duration: 0.08 }
+// TEMP DEBUG: a single always-mounted, always-opaque text pair ("Start Workout" red /
+// "Select workout" white) stacked in the same CSS grid cell so they share one center point
+// by construction, instead of relying on two elements happening to be positioned the same.
+// Only this wrapper's `bottom`/`fontSize` animate, driven directly off `open` — no layoutId
+// on the text. (A layoutId handoff unmounts the exiting element once AnimatePresence's exit
+// timing elapses, which is why the previous approach couldn't keep both texts visible at
+// once — see git history on this file.) Coordinates were measured from the real
+// .start-bar / .drawer__title boxes at a 390x844 viewport with no safe-area inset; this will
+// need to become measurement-based (refs + getBoundingClientRect) if the sheet's content
+// ever becomes dynamic instead of the current fixed Upper/Lower options.
+const TEXT_PAIR_BOTTOM = { closed: 44, open: 252 }
+const TEXT_PAIR_SIZE = { closed: 24, open: 18 }
 
 // The "Start Workout" bar and the type-picker sheet share layoutId="start-sheet", so
 // Framer Motion FLIP-animates one shape morphing into the other instead of treating them
@@ -54,49 +59,11 @@ export default function StartWorkoutSheet({ open, onOpen, onClose, onSelect }) {
               onClick={(e) => e.stopPropagation()}
               transition={SHEET_TRANSITION}
             >
-              {/* No group fade on the header itself — the title now animates independently
-                  (layoutId + blur/opacity, timed against the box morph) and would otherwise
-                  have its opacity compounded by a parent that's also fading. */}
               <div className="drawer__header">
-                <motion.span
-                  layoutId="sheet-title"
-                  className="text-subheadline drawer__title"
-                  // DEBUG (temporary): fade/blur commented out so both texts stay fully
-                  // visible throughout the morph, to check the layoutId position/size overlap
-                  // directly. Restore the opacity/filter animate+exit below once confirmed.
-                  // initial={{ opacity: 0, filter: 'blur(6px)' }}
-                  // animate={{
-                  //   opacity: 1,
-                  //   filter: 'blur(0px)',
-                  //   transition: { opacity: TITLE_ENTER_TRANSITION, filter: TITLE_ENTER_TRANSITION },
-                  // }}
-                  // exit={{
-                  //   opacity: 0,
-                  //   filter: 'blur(6px)',
-                  //   transition: { opacity: TITLE_EXIT_TRANSITION, filter: TITLE_EXIT_TRANSITION },
-                  // }}
-                  transition={{ layout: SHEET_TRANSITION }}
-                >
+                {/* Kept mounted (so the header retains its natural height) but invisible —
+                    the always-on text pair below renders the visible "Select workout" text now. */}
+                <span className="text-subheadline drawer__title" style={{ opacity: 0 }}>
                   Select workout
-                </motion.span>
-                {/* DEBUG (temporary): static red overlay at the label's natural 24px size,
-                    centered on the same spot as the title above. No animation, no
-                    AnimatePresence/unmount tied to it — stays on screen as long as the sheet
-                    is open so both texts can be compared side by side without racing the
-                    transition. Delete this span once the comparison is done. */}
-                <span
-                  className="text-headline"
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'red',
-                    pointerEvents: 'none',
-                  }}
-                >
-                  Start Workout
                 </span>
                 <motion.button
                   className="drawer__close"
@@ -140,32 +107,42 @@ export default function StartWorkoutSheet({ open, onOpen, onClose, onSelect }) {
             onClick={onOpen}
             transition={{ layout: SHEET_TRANSITION }}
           >
-            {/* Shares layoutId="sheet-title" with the header's title — position/size morph
-                between the two, same "wait for the box, then reveal / vanish fast" pacing as
-                before, just scoped to text instead of the whole box. */}
-            <motion.span
-              layoutId="sheet-title"
-              style={{ color: 'red' }} // DEBUG (temporary): mark this one to tell it apart
-              // DEBUG (temporary): fade/blur commented out, see matching note in the title
-              // above. Restore once the position/size overlap is confirmed.
-              // initial={{ opacity: 0, filter: 'blur(6px)' }}
-              // animate={{
-              //   opacity: 1,
-              //   filter: 'blur(0px)',
-              //   transition: { opacity: TITLE_ENTER_TRANSITION, filter: TITLE_ENTER_TRANSITION },
-              // }}
-              // exit={{
-              //   opacity: 0,
-              //   filter: 'blur(6px)',
-              //   transition: { opacity: TITLE_EXIT_TRANSITION, filter: TITLE_EXIT_TRANSITION },
-              // }}
-              transition={{ layout: SHEET_TRANSITION }}
-            >
-              Start Workout
-            </motion.span>
+            {/* Kept mounted (for .start-bar's own layout) but invisible — see note on
+                drawer__title above. */}
+            <span style={{ opacity: 0 }}>Start Workout</span>
           </motion.button>
         )}
       </AnimatePresence>
+
+      {/* TEMP DEBUG: the always-visible synchronized text pair. Both texts stay fully opaque
+          and perfectly overlapping (same grid cell) at all times; this wrapper's position and
+          font-size are the only things that animate, moving/resizing both texts together as
+          one unit between the bar's spot/size and the title's spot/size. */}
+      <motion.div
+        style={{
+          position: 'fixed',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'grid',
+          justifyItems: 'center',
+          zIndex: 20,
+          pointerEvents: 'none',
+          fontWeight: 700,
+          whiteSpace: 'nowrap',
+        }}
+        // Explicit `initial` (rather than leaving it to default) so mount reads from these
+        // values instead of the browser's unset-fontSize default (16px) — without it, the
+        // very first render briefly animates in from 16px, an unwanted flash on page load.
+        initial={{ bottom: TEXT_PAIR_BOTTOM.closed, fontSize: TEXT_PAIR_SIZE.closed }}
+        animate={{
+          bottom: open ? TEXT_PAIR_BOTTOM.open : TEXT_PAIR_BOTTOM.closed,
+          fontSize: open ? TEXT_PAIR_SIZE.open : TEXT_PAIR_SIZE.closed,
+        }}
+        transition={SHEET_TRANSITION}
+      >
+        <span style={{ gridArea: '1 / 1', color: 'red' }}>Start Workout</span>
+        <span style={{ gridArea: '1 / 1', color: 'white' }}>Select workout</span>
+      </motion.div>
     </MotionConfig>
   )
 }

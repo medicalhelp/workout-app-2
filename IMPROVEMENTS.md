@@ -80,18 +80,34 @@ capture things worth doing later instead of losing them.
   workout: 2 days ago" — a motivational nudge derived from existing `date` fields, no new data
   or charts needed. Distinct from (and much smaller than) the fuller "trend charts" idea below
   in Later.
-- **Blur+opacity "dissolve" for the Start Workout ↔ Select workout text swap.** Refines the
-  already-shipped drawer sheet morph, which currently crossfades the "Start Workout" label and
-  the "Select workout" header/options text with plain opacity + a small `y` offset. Apple has a
-  real named technique for exactly this: SwiftUI's `BlurReplaceTransition`
-  (`.transition(.blurReplace)`, iOS 17+) — outgoing content blurs and fades out while incoming
-  content starts blurred and transparent, then un-blurs and fades in together, rather than a
-  flat crossfade. Framer Motion has no built-in equivalent, but the same look is achievable by
-  animating CSS `filter: blur(Npx)` alongside `opacity` (e.g.
-  `initial={{ opacity: 0, filter: 'blur(8px)' }}` → `animate={{ opacity: 1, filter: 'blur(0px)'
-  }}`). Convenient timing: the white-flash fix already isolated the bar's label into its own
-  `<motion.span>` (so its opacity can't affect the box background) — that's the same element
-  blur would layer onto, no further restructuring needed.
+- **Blur+opacity "dissolve" for the Start Workout ↔ Select workout text swap, with matched
+  position + size.** Refines the already-shipped drawer sheet morph, which currently crossfades
+  the "Start Workout" label and the "Select workout" header/options text with plain opacity + a
+  small `y` offset, in place. Two things layered together:
+  - **Content dissolve.** Apple has a real named technique for this: SwiftUI's
+    `BlurReplaceTransition` (`.transition(.blurReplace)`, iOS 17+) — outgoing content blurs and
+    fades out while incoming content starts blurred and transparent, then un-blurs and fades in
+    together, rather than a flat crossfade. Framer Motion has no built-in equivalent, but the
+    same look is achievable by animating CSS `filter: blur(Npx)` alongside `opacity` (e.g.
+    `initial={{ opacity: 0, filter: 'blur(8px)' }}` → `animate={{ opacity: 1, filter:
+    'blur(0px)' }}`).
+  - **Position + size continuity.** The label shouldn't just dissolve in place — it should move
+    and resize into the title's actual spot, so it reads as one continuous element transforming
+    rather than two texts fading past each other at fixed positions. This is a real, meaningful
+    delta: the label is `.text-headline` (24px, centered in the full-width bottom bar) and the
+    title is `.text-subheadline` (18px, top of the header) — different size *and* position.
+    Mirrors what Apple calls `matchedGeometryEffect` in SwiftUI — shared-geometry continuity
+    between two different views, typically paired with exactly this kind of content dissolve
+    since the actual text differs and can't morph glyph-by-glyph. Buildable the same way the
+    drawer's own box-morph already works: give the label and the title their own shared
+    `layoutId` (distinct from the box's `layoutId="start-sheet"`), and Framer Motion's
+    layout/FLIP animation interpolates position and size (via `transform`, so the font-size
+    difference reads as a smooth scale) while the blur+opacity dissolve above handles the
+    character swap within that moving, resizing frame.
+  - Convenient timing either way: the white-flash fix already isolated the bar's label into its
+    own `<motion.span>` (so its opacity can't affect the box background) — that's the same
+    element both the blur and the shared layoutId would attach to, no further restructuring
+    needed.
 
 ## Near-term
 
@@ -206,3 +222,6 @@ capture things worth doing later instead of losing them.
 - 2026-09-23 — added a blur+opacity text-dissolve idea for the drawer sheet morph's content
   swap, after confirming Apple's actual technique (SwiftUI's `BlurReplaceTransition` /
   `.blurReplace`, iOS 17+) via research — no existing entry covered this.
+- 2026-09-23 — extended that idea with matched position + size continuity (a shared `layoutId`
+  between the label and title, mirroring SwiftUI's `matchedGeometryEffect`) so the text reads as
+  one continuous element transforming, not two texts fading past each other in place.

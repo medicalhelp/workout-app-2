@@ -80,6 +80,18 @@ capture things worth doing later instead of losing them.
   workout: 2 days ago" — a motivational nudge derived from existing `date` fields, no new data
   or charts needed. Distinct from (and much smaller than) the fuller "trend charts" idea below
   in Later.
+- **Blur+opacity "dissolve" for the Start Workout ↔ Select workout text swap.** Refines the
+  already-shipped drawer sheet morph, which currently crossfades the "Start Workout" label and
+  the "Select workout" header/options text with plain opacity + a small `y` offset. Apple has a
+  real named technique for exactly this: SwiftUI's `BlurReplaceTransition`
+  (`.transition(.blurReplace)`, iOS 17+) — outgoing content blurs and fades out while incoming
+  content starts blurred and transparent, then un-blurs and fades in together, rather than a
+  flat crossfade. Framer Motion has no built-in equivalent, but the same look is achievable by
+  animating CSS `filter: blur(Npx)` alongside `opacity` (e.g.
+  `initial={{ opacity: 0, filter: 'blur(8px)' }}` → `animate={{ opacity: 1, filter: 'blur(0px)'
+  }}`). Convenient timing: the white-flash fix already isolated the bar's label into its own
+  `<motion.span>` (so its opacity can't affect the box background) — that's the same element
+  blur would layer onto, no further restructuring needed.
 
 ## Near-term
 
@@ -191,3 +203,6 @@ capture things worth doing later instead of losing them.
   select-from-list, tap-to-see-data), picking a suggestion is what links a line to a canonical
   exercise, and an info button above the keyboard (not inline-tappable text) for viewing an
   exercise's data while typing.
+- 2026-09-23 — added a blur+opacity text-dissolve idea for the drawer sheet morph's content
+  swap, after confirming Apple's actual technique (SwiftUI's `BlurReplaceTransition` /
+  `.blurReplace`, iOS 17+) via research — no existing entry covered this.

@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion'
 import './StartWorkoutSheet.scss'
 
@@ -23,24 +24,43 @@ function CloseIcon() {
 const SHEET_TRANSITION = { duration: 0.32, ease: [0.32, 0.72, 0, 1] }
 const TAP_TRANSITION = { type: 'spring', stiffness: 700, damping: 30 }
 
+const TEXT_PAIR_SIZE = { closed: 24, open: 18 }
+
 // TEMP DEBUG: a single always-mounted, always-opaque text pair ("Start Workout" red /
 // "Select workout" white) stacked in the same CSS grid cell so they share one center point
 // by construction, instead of relying on two elements happening to be positioned the same.
-// Only this wrapper's `bottom`/`fontSize` animate, driven directly off `open` — no layoutId
-// on the text. (A layoutId handoff unmounts the exiting element once AnimatePresence's exit
-// timing elapses, which is why the previous approach couldn't keep both texts visible at
-// once — see git history on this file.) Coordinates were measured from the real
-// .start-bar / .drawer__title boxes at a 390x844 viewport with no safe-area inset; this will
-// need to become measurement-based (refs + getBoundingClientRect) if the sheet's content
-// ever becomes dynamic instead of the current fixed Upper/Lower options.
-const TEXT_PAIR_BOTTOM = { closed: 44, open: 252 }
-const TEXT_PAIR_SIZE = { closed: 24, open: 18 }
-
-// The "Start Workout" bar and the type-picker sheet share layoutId="start-sheet", so
-// Framer Motion FLIP-animates one shape morphing into the other instead of treating them
-// as an independent slide-up. Content (label vs. header+options) is staggered to fade in
-// only once the shape has mostly resized, so it doesn't visibly stretch mid-morph.
+// Only this wrapper's `top`/`fontSize` animate, driven directly off `open` — no layoutId on
+// the text. (A layoutId handoff unmounts the exiting element once AnimatePresence's exit
+// timing elapses, which is why an earlier approach couldn't keep both texts visible at once
+// — see git history on this file.)
+//
+// The vertical target is measured live off the real elements (the bar and the close button)
+// via refs rather than hardcoded — a hardcoded pixel value taken from a desktop-browser
+// measurement doesn't hold on a real device (safe-area insets, Safari's dynamic toolbar,
+// system font metrics all shift it), and "centered with the icon button" is what's actually
+// wanted for the open state, not wherever the old title text happened to sit.
 export default function StartWorkoutSheet({ open, onOpen, onClose, onSelect }) {
+  const barRef = useRef(null)
+  const closeButtonRef = useRef(null)
+  const [closedCenterY, setClosedCenterY] = useState(null)
+  const [openCenterY, setOpenCenterY] = useState(null)
+
+  useLayoutEffect(() => {
+    if (!open && barRef.current) {
+      const rect = barRef.current.getBoundingClientRect()
+      setClosedCenterY(rect.top + rect.height / 2)
+    }
+  }, [open])
+
+  useLayoutEffect(() => {
+    if (open && closeButtonRef.current) {
+      const rect = closeButtonRef.current.getBoundingClientRect()
+      setOpenCenterY(rect.top + rect.height / 2)
+    }
+  }, [open])
+
+  const centerY = open ? openCenterY : closedCenterY
+
   return (
     <MotionConfig transition={SHEET_TRANSITION}>
       <AnimatePresence initial={false}>
@@ -66,6 +86,7 @@ export default function StartWorkoutSheet({ open, onOpen, onClose, onSelect }) {
                   Select workout
                 </span>
                 <motion.button
+                  ref={closeButtonRef}
                   className="drawer__close"
                   onClick={onClose}
                   initial={{ opacity: 0 }}
@@ -101,6 +122,7 @@ export default function StartWorkoutSheet({ open, onOpen, onClose, onSelect }) {
           // page's white background shows through underneath. Confirmed with a pixel sample
           // mid-close: the box read as (253,253,253), i.e. pure white, not a color mismatch.
           <motion.button
+            ref={barRef}
             key="bar"
             layoutId="start-sheet"
             className="text-headline start-bar"
@@ -117,32 +139,42 @@ export default function StartWorkoutSheet({ open, onOpen, onClose, onSelect }) {
       {/* TEMP DEBUG: the always-visible synchronized text pair. Both texts stay fully opaque
           and perfectly overlapping (same grid cell) at all times; this wrapper's position and
           font-size are the only things that animate, moving/resizing both texts together as
-          one unit between the bar's spot/size and the title's spot/size. */}
-      <motion.div
-        style={{
-          position: 'fixed',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          display: 'grid',
-          justifyItems: 'center',
-          zIndex: 20,
-          pointerEvents: 'none',
-          fontWeight: 700,
-          whiteSpace: 'nowrap',
-        }}
-        // Explicit `initial` (rather than leaving it to default) so mount reads from these
-        // values instead of the browser's unset-fontSize default (16px) — without it, the
-        // very first render briefly animates in from 16px, an unwanted flash on page load.
-        initial={{ bottom: TEXT_PAIR_BOTTOM.closed, fontSize: TEXT_PAIR_SIZE.closed }}
-        animate={{
-          bottom: open ? TEXT_PAIR_BOTTOM.open : TEXT_PAIR_BOTTOM.closed,
-          fontSize: open ? TEXT_PAIR_SIZE.open : TEXT_PAIR_SIZE.closed,
-        }}
-        transition={SHEET_TRANSITION}
-      >
-        <span style={{ gridArea: '1 / 1', color: 'red' }}>Start Workout</span>
-        <span style={{ gridArea: '1 / 1', color: 'white' }}>Select workout</span>
-      </motion.div>
+          one unit between the bar's center and the close button's center. `top` + translate(-50%)
+          (rather than `bottom`) so the animated value always means "vertical center", regardless
+          of how the text's own line-height changes between the two font sizes.
+
+          Gated on `centerY != null`: nothing has been measured yet for one frame on first
+          mount (before the layout effect above runs), so this doesn't render at all until a
+          real position is known — otherwise it'd mount at the browser's unset-style defaults
+          (top: auto, 16px font) and visibly animate in from there, same class of flash as the
+          earlier fontSize-from-16px bug this file used to have. */}
+      {centerY != null && (
+        <motion.div
+          style={{
+            position: 'fixed',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            display: 'grid',
+            justifyItems: 'center',
+            zIndex: 20,
+            pointerEvents: 'none',
+            fontWeight: 700,
+            whiteSpace: 'nowrap',
+          }}
+          // The very first mount always happens while closed (the drawer starts closed), so
+          // `initial` matches that state exactly — no animation on the reveal itself, only on
+          // later open/close changes to `animate`.
+          initial={{ top: centerY, fontSize: TEXT_PAIR_SIZE.closed }}
+          animate={{
+            top: centerY,
+            fontSize: open ? TEXT_PAIR_SIZE.open : TEXT_PAIR_SIZE.closed,
+          }}
+          transition={SHEET_TRANSITION}
+        >
+          <span style={{ gridArea: '1 / 1', color: 'red' }}>Start Workout</span>
+          <span style={{ gridArea: '1 / 1', color: 'white' }}>Select workout</span>
+        </motion.div>
+      )}
     </MotionConfig>
   )
 }

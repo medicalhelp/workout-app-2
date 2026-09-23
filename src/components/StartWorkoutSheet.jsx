@@ -61,17 +61,20 @@ export default function StartWorkoutSheet({ open, onOpen, onClose, onSelect }) {
                 <motion.span
                   layoutId="sheet-title"
                   className="text-subheadline drawer__title"
-                  initial={{ opacity: 0, filter: 'blur(6px)' }}
-                  animate={{
-                    opacity: 1,
-                    filter: 'blur(0px)',
-                    transition: { opacity: TITLE_ENTER_TRANSITION, filter: TITLE_ENTER_TRANSITION },
-                  }}
-                  exit={{
-                    opacity: 0,
-                    filter: 'blur(6px)',
-                    transition: { opacity: TITLE_EXIT_TRANSITION, filter: TITLE_EXIT_TRANSITION },
-                  }}
+                  // DEBUG (temporary): fade/blur commented out so both texts stay fully
+                  // visible throughout the morph, to check the layoutId position/size overlap
+                  // directly. Restore the opacity/filter animate+exit below once confirmed.
+                  // initial={{ opacity: 0, filter: 'blur(6px)' }}
+                  // animate={{
+                  //   opacity: 1,
+                  //   filter: 'blur(0px)',
+                  //   transition: { opacity: TITLE_ENTER_TRANSITION, filter: TITLE_ENTER_TRANSITION },
+                  // }}
+                  // exit={{
+                  //   opacity: 0,
+                  //   filter: 'blur(6px)',
+                  //   transition: { opacity: TITLE_EXIT_TRANSITION, filter: TITLE_EXIT_TRANSITION },
+                  // }}
                   transition={{ layout: SHEET_TRANSITION }}
                 >
                   Select workout
@@ -123,17 +126,20 @@ export default function StartWorkoutSheet({ open, onOpen, onClose, onSelect }) {
                 before, just scoped to text instead of the whole box. */}
             <motion.span
               layoutId="sheet-title"
-              initial={{ opacity: 0, filter: 'blur(6px)' }}
-              animate={{
-                opacity: 1,
-                filter: 'blur(0px)',
-                transition: { opacity: TITLE_ENTER_TRANSITION, filter: TITLE_ENTER_TRANSITION },
-              }}
-              exit={{
-                opacity: 0,
-                filter: 'blur(6px)',
-                transition: { opacity: TITLE_EXIT_TRANSITION, filter: TITLE_EXIT_TRANSITION },
-              }}
+              style={{ color: 'red' }} // DEBUG (temporary): mark this one to tell it apart
+              // DEBUG (temporary): fade/blur commented out, see matching note in the title
+              // above. Restore once the position/size overlap is confirmed.
+              // initial={{ opacity: 0, filter: 'blur(6px)' }}
+              // animate={{
+              //   opacity: 1,
+              //   filter: 'blur(0px)',
+              //   transition: { opacity: TITLE_ENTER_TRANSITION, filter: TITLE_ENTER_TRANSITION },
+              // }}
+              // exit={{
+              //   opacity: 0,
+              //   filter: 'blur(6px)',
+              //   transition: { opacity: TITLE_EXIT_TRANSITION, filter: TITLE_EXIT_TRANSITION },
+              // }}
               transition={{ layout: SHEET_TRANSITION }}
             >
               Start Workout

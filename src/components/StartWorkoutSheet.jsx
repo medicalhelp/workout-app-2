@@ -79,6 +79,25 @@ export default function StartWorkoutSheet({ open, onOpen, onClose, onSelect }) {
                 >
                   Select workout
                 </motion.span>
+                {/* DEBUG (temporary): static red overlay at the label's natural 24px size,
+                    centered on the same spot as the title above. No animation, no
+                    AnimatePresence/unmount tied to it — stays on screen as long as the sheet
+                    is open so both texts can be compared side by side without racing the
+                    transition. Delete this span once the comparison is done. */}
+                <span
+                  className="text-headline"
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'red',
+                    pointerEvents: 'none',
+                  }}
+                >
+                  Start Workout
+                </span>
                 <motion.button
                   className="drawer__close"
                   onClick={onClose}

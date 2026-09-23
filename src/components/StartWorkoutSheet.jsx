@@ -26,13 +26,15 @@ const TAP_TRANSITION = { type: 'spring', stiffness: 700, damping: 30 }
 
 const TEXT_PAIR_SIZE = { closed: 24, open: 18 }
 
-// The dissolve: whichever text is becoming hidden fades out fast (no delay, so it doesn't
-// linger through the move), while the one becoming visible fades in later and slower, timed
-// to land right as the box morph (SHEET_TRANSITION, 0.32s) finishes — delay 0.14 + duration
-// 0.18 = 0.32. Blur (rather than a flat crossfade) sells the illusion of one text morphing
-// into the other despite the words actually being completely different, glyph for glyph.
-const TEXT_PAIR_EXIT_TRANSITION = { duration: 0.08 }
-const TEXT_PAIR_ENTER_TRANSITION = { duration: 0.18, delay: 0.14 }
+// The dissolve: the outgoing text starts fading+blurring out immediately, and the incoming
+// text starts before the outgoing one has finished — a 160ms overlap where both are partway
+// faded/blurred at once — rather than a hard handoff with a blank gap in between. The incoming
+// text's end is still pinned to when the box morph (SHEET_TRANSITION, 0.32s) finishes, so the
+// two land together: delay 0.06 + duration 0.26 = 0.32. Blur (rather than a flat crossfade)
+// sells the illusion of one text morphing into the other despite the words actually being
+// completely different, glyph for glyph.
+const TEXT_PAIR_EXIT_TRANSITION = { duration: 0.22 }
+const TEXT_PAIR_ENTER_TRANSITION = { duration: 0.26, delay: 0.06 }
 
 // A single always-mounted text pair ("Start Workout" / "Select workout") stacked in the same
 // CSS grid cell so they share one center point by construction, instead of relying on two

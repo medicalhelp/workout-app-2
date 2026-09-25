@@ -10,6 +10,18 @@ export default function Overview({ workouts, onOpenWorkout, onDeleteWorkout }) {
 
   return (
     <div className="overview">
+      {/* Shared goo filter for every WorkoutCard's swipe-to-delete blob merge (referenced via
+          `filter: url(#goo)` in WorkoutCard.scss) — defined once here rather than per-card
+          since SVG filters are referenced by id, not duplicated per element. Blurs the two
+          shapes together, then the feColorMatrix sharpens the alpha channel back to a hard
+          edge everywhere except the blurred overlap, which is what reads as a liquid seam. */}
+      <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
+        <filter id="goo">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur" />
+          <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" />
+        </filter>
+      </svg>
+
       <h1 className="text-headline overview__title">Workout</h1>
 
       {workouts.length === 0 ? (

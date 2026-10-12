@@ -1,0 +1,29 @@
+@use '../styles/colors' as *;
+
+.weight-chart {
+  width: 100%;
+  height: 120px;
+
+  &__svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: visible;
+  }
+
+  &__line {
+    fill: none;
+    stroke: $color-ink;
+    stroke-width: 2px;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  &__dot-ring {
+    fill: $color-page-bg;
+  }
+
+  &__dot {
+    fill: $color-ink;
+  }
+}

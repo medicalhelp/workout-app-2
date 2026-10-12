@@ -26,10 +26,6 @@ capture things worth doing later instead of losing them.
   Workout → pick type → wait for the "last session of this type" prefill when you already know
   exactly which past log you want to repeat — and it's the only way to start from something
   other than the most recent session of a type.
-- **Lightweight bodyweight/measurement log.** A separate, minimal freeform log (date + a
-  number/note) for tracking bodyweight over time — same "don't force structure" spirit as the
-  workout log, but a distinct concern from workout content. Needs its own small data store,
-  entry point, and a simple list view; doesn't belong inside `content`.
 - **Exercise autosuggest while typing.** Instead of purely free text, surface a select-from-list
   / autocomplete for exercise names as you type in the log textarea, to cut down on repetitive
   retyping ("Preacher Curl", "Bench Press", etc. every session). Source suggestions from the
@@ -198,3 +194,8 @@ capture things worth doing later instead of losing them.
   one continuous element transforming, not two texts fading past each other in place.
 - 2026-09-23 — shipped the blur+opacity dissolve with matched position/size continuity; removed
   from the backlog.
+- 2026-10-12 — shipped weight tracking: a glanceable pill badge on Overview (latest value +
+  relative freshness, e.g. "62,5kg · today"), a dedicated Weight screen (own `weightStore.js`
+  data store, separate from workouts) with a smoothed trend line chart, an inline "+ Add" entry
+  prefilled with the last value, and a reverse-chronological list showing full dates. Removed
+  the "Lightweight bodyweight/measurement log" idea from the backlog.

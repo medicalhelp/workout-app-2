@@ -6,8 +6,24 @@
   max-width: 480px;
   margin: 0 auto;
 
-  &__title {
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
     margin-bottom: 24px;
+  }
+
+  &__title {
+    margin: 0;
+  }
+
+  &__weight-badge {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid $color-gray-border;
+    color: $color-ink;
   }
 
   &__empty {

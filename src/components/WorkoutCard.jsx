@@ -7,16 +7,16 @@ const DELETE_WIDTH = 88
 const FLICK_VELOCITY = 500
 const SNAP_TRANSITION = { type: 'spring', stiffness: 420, damping: 30 }
 
-// The reveal is driven by a single motion value (dragX) rather than React state — both the
-// draggable surface and the goo blob shapes below read it directly via `style`, so they stay
-// in perfect lockstep at 60fps without a re-render on every pointer move.
+// The reveal is driven by a single motion value (dragX) rather than React state — the
+// draggable surface and the delete button's width both read it directly via `style`, so they
+// stay in lockstep at 60fps without a re-render on every pointer move.
 export default function WorkoutCard({ workout, open, onOpen, onSwipeChange, onDelete }) {
   const dragX = useMotionValue(open ? -DELETE_WIDTH : 0)
-  // Mirrors dragX exactly (delete shape's width == however far the surface has been dragged),
-  // so the two goo shapes' edges always meet precisely at the same seam, whatever dragX is —
-  // including past -DELETE_WIDTH during an elastic overdrag, where the delete shape stretches
-  // wider than its resting size before springing back.
-  const deleteShapeWidth = useTransform(dragX, (x) => Math.max(0, -x))
+  // The delete button's width == however far the surface has been dragged, so it grows in
+  // continuously as you drag rather than being a static 88px block revealed by a sliding
+  // cover — including past -DELETE_WIDTH during an elastic overdrag, where it stretches wider
+  // than its resting size before springing back.
+  const deleteWidth = useTransform(dragX, (x) => Math.max(0, -x))
   // The label only fades in once there's enough revealed width to read it, rather than
   // appearing distorted/cramped the instant the sliver starts showing.
   const deleteLabelOpacity = useTransform(dragX, [-DELETE_WIDTH * 0.45, -DELETE_WIDTH * 0.9], [0, 1])
@@ -67,38 +67,30 @@ export default function WorkoutCard({ workout, open, onOpen, onSwipeChange, onDe
 
   return (
     <div className="workout-card">
-      {/* Goo layer: two solid, same-colored shapes whose blurred, contrast-sharpened edges
-          fuse into a liquid blob while they're close together and separate cleanly once fully
-          open — the actual blending is the SVG filter (id="goo") defined once in Overview.jsx
-          and shared by every card. Deliberately NOT clipped (no overflow:hidden) so the blur
-          has room to bleed; the crisp text layer below is a separate, clipped layer so the
-          blur never touches the text itself. */}
-      <div className="workout-card__goo">
-        <motion.div className="workout-card__delete-shape" style={{ width: deleteShapeWidth }} />
-        <motion.div className="workout-card__surface-shape" style={{ x: dragX }} />
-      </div>
-
-      <div className="workout-card__clip">
-        <button className="workout-card__delete" onClick={() => onDelete(workout.id)} aria-label="Delete workout">
-          <motion.span className="workout-card__delete-label" style={{ opacity: deleteLabelOpacity }}>
-            Delete
-          </motion.span>
-        </button>
-        <motion.div
-          className="workout-card__surface"
-          style={{ x: dragX }}
-          drag="x"
-          dragConstraints={{ left: -DELETE_WIDTH, right: 0 }}
-          dragElastic={0.35}
-          dragTransition={{ bounceStiffness: 420, bounceDamping: 26 }}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-          onClick={handleSurfaceClick}
-        >
-          <span className="text-subheadline workout-card__type">{workout.type}</span>
-          <span className="text-body workout-card__date">{formatDate(workout.date)}</span>
-        </motion.div>
-      </div>
+      <motion.button
+        className="workout-card__delete"
+        style={{ width: deleteWidth }}
+        onClick={() => onDelete(workout.id)}
+        aria-label="Delete workout"
+      >
+        <motion.span className="workout-card__delete-label" style={{ opacity: deleteLabelOpacity }}>
+          Delete
+        </motion.span>
+      </motion.button>
+      <motion.div
+        className="workout-card__surface"
+        style={{ x: dragX }}
+        drag="x"
+        dragConstraints={{ left: -DELETE_WIDTH, right: 0 }}
+        dragElastic={0.35}
+        dragTransition={{ bounceStiffness: 420, bounceDamping: 26 }}
+        onDragStart={handleDragStart}
+        onDragEnd={handleDragEnd}
+        onClick={handleSurfaceClick}
+      >
+        <span className="text-subheadline workout-card__type">{workout.type}</span>
+        <span className="text-body workout-card__date">{formatDate(workout.date)}</span>
+      </motion.div>
     </div>
   )
 }

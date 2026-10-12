@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion'
 import './StartWorkoutSheet.scss'
 
@@ -65,6 +65,29 @@ export default function StartWorkoutSheet({ open, hidden, onOpen, onClose, onSel
       setOpenCenterY(rect.top + rect.height / 2)
     }
   }, [open])
+
+  // Re-measure on viewport resize, not just when `open` changes — on a real iPhone, Safari's
+  // address bar collapsing/expanding after the initial load changes the visual viewport (and
+  // therefore where a `position: fixed; bottom: 0` element actually sits) without the user
+  // ever toggling the drawer. Without this, the cached position goes stale and the text pair
+  // renders at the OLD bar position — confirmed on-device: it floated over the card list
+  // instead of sitting in the bottom bar. `visualViewport` is what iOS Safari actually fires
+  // this resize on; `window` is the fallback for browsers without it.
+  useEffect(() => {
+    function measure() {
+      if (barRef.current) {
+        const rect = barRef.current.getBoundingClientRect()
+        setClosedCenterY(rect.top + rect.height / 2)
+      }
+      if (closeButtonRef.current) {
+        const rect = closeButtonRef.current.getBoundingClientRect()
+        setOpenCenterY(rect.top + rect.height / 2)
+      }
+    }
+    const target = window.visualViewport ?? window
+    target.addEventListener('resize', measure)
+    return () => target.removeEventListener('resize', measure)
+  }, [])
 
   const centerY = open ? openCenterY : closedCenterY
 
